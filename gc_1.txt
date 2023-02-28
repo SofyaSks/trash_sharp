@@ -1,0 +1,378 @@
+//1  сборщик мусора
+//Garbage Collector
+//класс System.GC
+//Collect() - метод принудительного запуска сборщика мусора
+//String, Attribute, Exception, Delegate - автоматически
+
+//пример 1 
+
+//using System;
+//using static System.Console;
+//namespace SimpleProject
+//{
+//    class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            WriteLine("Демонстрация System.GC");
+//            WriteLine($"Максимальное поколение: { GC.MaxGeneration}");
+//            GarbageHelper hlp = new GarbageHelper();
+//            WriteLine($"Поколение объекта: { GC.GetGeneration(hlp)}");
+//            WriteLine($"Занято памяти(байт): { GC.GetTotalMemory(false)}");
+//            hlp.MakeGarbage();
+//            WriteLine($"Занято памяти(байт): { GC.GetTotalMemory(false)}");
+//            GC.Collect(0);
+//            WriteLine($"Занято памяти(байт): { GC.GetTotalMemory(false)}");
+//            WriteLine($"Поколение объекта: { GC.GetGeneration(hlp)}");
+//            GC.Collect();
+//            WriteLine($"Занято памяти(байт): { GC.GetTotalMemory(false)}");
+//            WriteLine($"Поколение объекта:{ GC.GetGeneration(hlp)}");
+//        }
+//    }
+//    class GarbageHelper
+//    {
+//        public void MakeGarbage()
+//        {
+//            for (int i = 0; i < 1000; i++)
+//            {
+//                Person p = new Person();
+//            }
+//        }
+//        class Person
+//        {
+//            string _name;
+//            string _surname;
+//            byte _age;
+//        }
+//    }
+//}
+
+//пример1.1
+
+//using System;
+//using static System.Console;
+//namespace GCGenerationExample
+//{
+//    class Program
+//    {
+//        static void Main(string[] args)
+//        {
+
+//            Garbage g1 = new Garbage();
+//            Garbage g2 = new Garbage();
+//            Garbage g3 = new Garbage();
+//            Console.WriteLine("Номер поколения g1 : {0}", GC.GetGeneration(g1));
+//            Console.WriteLine("Номер поколения g2 : {0}", GC.GetGeneration(g2));
+//            Console.WriteLine("Номер поколения g3 : {0}", GC.GetGeneration(g3));
+//            Console.WriteLine("Количество занятой памяти " + "До сбора мусора: {0} байт", GC.GetTotalMemory(false));
+
+//            GC.Collect(0);
+//            Console.WriteLine("Количество занятой памяти " + "после сбора мусора: {0} байт", GC.GetTotalMemory(false));
+//            Console.WriteLine("Номер поколения g2 : {0}", GC.GetGeneration(g2));
+//            Console.WriteLine("Номер поколения g3 : {0}", GC.GetGeneration(g3));
+
+//            Console.WriteLine("Количнство занятой памяти " + "До сбора мусора: {0} байт", GC.GetTotalMemory(false));
+//            GC.Collect(1);
+//            Console.WriteLine("Номер поколения g3 : {0}", GC.GetGeneration(g3));
+//            Console.WriteLine("Количнство занятой памяти " + "До сбора мусора: {0} байт", GC.GetTotalMemory(false));
+//            GC.Collect(2);
+//            Console.WriteLine("Количнство занятой памяти " + "после сбора мусора: {0} байт", GC.GetTotalMemory(false));
+//            Console.WriteLine("Номер поколения g3 : {0}", GC.GetGeneration(g3));
+
+//        }
+//    }
+//    class Garbage
+//    {
+//        private int[] _garbage = null;
+//        public Garbage()
+//        {
+//            Random rnd = new Random();
+//            this._garbage = new int[rnd.Next(1000, 10000)];
+//            for (int i = 0; i < this._garbage.Length; i++)
+//            {
+//                this._garbage[i] = rnd.Next();
+//            }
+//        }
+//    }
+//}
+
+
+
+
+
+
+// пример 2 +
+//using System;
+
+//namespace GCExample
+//{
+//    class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            Console.WriteLine("Демонстрация System.GC");
+//            Console.WriteLine("Максимальное поколение: {0}", GC.MaxGeneration);
+
+//            GarbageHelper hlp = new GarbageHelper();
+//            Console.WriteLine("Поколение объекта: {0}", GC.GetGeneration(hlp));
+//            Console.WriteLine("Занято памяти (байт): {0}",
+//                GC.GetTotalMemory(false));
+//            hlp.MakeGarbage();
+//            Console.WriteLine("Занято памяти (байт): {0}",
+//                GC.GetTotalMemory(false));
+//            GC.Collect(0);
+//            Console.WriteLine("Занято памяти (байт): {0}",
+//                GC.GetTotalMemory(false));
+//            Console.WriteLine("Поколение объекта: {0}",
+//                GC.GetGeneration(hlp));
+//            GC.Collect();
+//            Console.WriteLine("Занято памяти (байт): {0}",
+//                GC.GetTotalMemory(false));
+//            Console.WriteLine("Поколение объекта: {0}", GC.GetGeneration(hlp));
+//            Console.Read();
+//        }
+//    }
+
+
+//    class GarbageHelper
+//    {
+//        public void MakeGarbage()
+//        {
+//            for (int i = 0; i < 1000; i++)
+//            {
+//                var p = new Person();
+//            }
+//        }
+
+//        class Person
+//        {
+//            private string _name;
+//            private string _surname;
+//            private byte _age;
+
+//            public Person(string name, string surname, byte age)
+//            {
+//                this._age = age;
+//                this._name = name;
+//                this._surname = surname;
+//            }
+
+//            public Person()
+//                : this("", "", 0)
+//            {
+//            }
+//        }
+//    }
+//}
+
+
+//2. Финализатор и метод Finalizе класса System.Object.
+//System.IO.FileStream, System.Net.Socket, System.Threading.Mutex 
+
+//using System;
+
+//namespace FinalizeExample
+//{
+//    class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            MyClass mc = new MyClass();
+
+//        }
+//    }
+//    class MyClass
+//    {
+//        public MyClass()
+//        {
+//            Console.WriteLine("Создание объекта");
+//        }
+
+
+//        ~MyClass()
+//        {
+//            Console.WriteLine("Уничтожение объекта");
+//        }
+//    }
+
+//}
+
+
+//using System;
+
+//namespace ConsoleApplication1
+//{
+//    class FinalizeObject
+//    {
+//        public int id { get; set; }
+
+//        public FinalizeObject(int id)
+//        {
+//            this.id = id;
+//        }
+
+//        // Создадим специальный деструктор
+//        ~FinalizeObject()
+//        {
+//            Console.ForegroundColor = ConsoleColor.Yellow;
+//            Console.WriteLine("Объект №{0} уничтожен", id);
+//            Console.Beep();
+//        }
+//    }
+
+//    class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            Console.Read();
+//            // После того как будет нажата клавиша Enter (выход из программы)
+//            // все последующие объекты будут уничтожены
+
+//            FinalizeObject[] obj = new FinalizeObject[15];
+//            for (int i = 0; i < 15; i++)
+//                obj[i] = new FinalizeObject(i);
+//        }
+//    }
+//}
+
+
+// 3. Метод Dispose и интерфейс IDisposable
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+
+//class DisposeEx : IDisposable
+//{
+//    public void Dispose()
+//    {
+//        Console.WriteLine("Очистка" );
+
+//    }
+//}
+
+//class Program
+//{
+//    static void Main(string[] args)
+//    {
+//        DisposeEx de = new DisposeEx();
+//        de.Dispose();
+//    }
+//}
+
+namespace IDisposableExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+
+                Console.Write("Введите путь к файлу: ");
+                string fileSpec = Console.ReadLine();
+                FileStream fs = File.OpenRead(fileSpec);
+                //-------------------------------------------------------
+
+                // DisposableResource testObj = new DisposableResource(fs);
+                //1
+
+                //testObj.DoSomethingWithResource();
+
+
+                // testObj.Dispose();
+
+
+
+                //2
+                //-------------------------------------------------------
+                //Использование блока try/finally
+                //DisposableResource testObj = new DisposableResource(fs);
+                //try
+                //{
+
+                //    testObj.DoSomethingWithResource();
+                //}
+                //finally
+                //{
+
+                //    if (testObj != null)
+                //        testObj.Dispose();
+                //}
+                //-------------------------------------------------------
+
+                //3
+                // Использование блока using
+                using (DisposableResource testObj = new DisposableResource(fs))
+                {
+                    testObj.DoSomethingWithResource();
+                }
+                //-------------------------------------------------------
+
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+    }
+}
+
+public class DisposableResource : IDisposable
+{
+
+    private Stream _resource;
+    private bool _disposed;
+
+
+    public DisposableResource(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException("Поток null.");
+        if (!stream.CanRead)
+            throw new ArgumentException("Поток должен быть" + "доступен для чтения.");
+
+        this._resource = stream;
+        this._disposed = false;
+    }
+    public void DoSomethingWithResource()
+    {
+        if (_disposed)
+            throw new ObjectDisposedException("Ресурс был освобожден.");
+        int numBytes = (int)_resource.Length;
+        Console.WriteLine("Количество байт: {0}", numBytes.ToString());
+    }
+
+    public void Dispose()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    ~DisposableResource()
+    {
+        this.Dispose(false);
+    }
+
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                if (_resource != null)
+                    _resource.Dispose();
+                Console.WriteLine("Ресурс освобожден.");
+            }
+
+            this._resource = null;
+            this._disposed = true;
+        }
+    }
+}
+
+
+
+
+
